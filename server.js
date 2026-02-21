@@ -30,7 +30,10 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API documentation for the Games Management System',
     },
-    servers: [{ url: 'http://localhost:5000' }],
+    servers: [
+      { url: 'https://muislem-back.onrender.com', description: 'Production Server' },
+      { url: 'http://localhost:5000', description: 'Local Development' },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
