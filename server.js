@@ -1,4 +1,6 @@
 // server.js
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -14,7 +16,23 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(cors());
+const allowedOrigins = [
+  'https://muislem-front.onrender.com',
+  'http://localhost:5173',
+  'http://localhost:4173',
+];
+app.use(cors({
+  origin: (origin, callback) => {
+    // السماح للطلبات اللي معهاش origin (زي Postman) أو من الـ allowed list
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
 
 // Mount routes
@@ -34,22 +52,8 @@ const swaggerOptions = {
       { url: 'https://muislem-back.onrender.com', description: 'Production Server' },
       { url: 'http://localhost:5000', description: 'Local Development' },
     ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          description: 'JWT token from /api/admin/login. Paste only the token (without "Bearer" prefix)'
-        }
-      }
-    },
-    security: [
-      {
-        bearerAuth: []
-      }
-    ]
   },
-  apis: ['./routes/*.js'], // ناخد الـ docs من ملفات routes مباشرة
+  apis: [join(dirname(fileURLToPath(import.meta.url)), 'routes', '*.js')], // مسار مطلق يشتغل على Render
 };
 const startServer = async () => {
   try {
