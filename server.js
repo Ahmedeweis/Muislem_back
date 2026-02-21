@@ -16,20 +16,9 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-const allowedOrigins = [
-  'https://muislem-front.onrender.com',
-  'http://localhost:5173',
-  'http://localhost:4173',
-];
+// ✅ مفتوح للكل مؤقتاً (Swagger + Vue + Postman) - يتقيّد بعد رفع الفرونت
 app.use(cors({
-  origin: (origin, callback) => {
-    // السماح للطلبات اللي معهاش origin (زي Postman) أو من الـ allowed list
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
