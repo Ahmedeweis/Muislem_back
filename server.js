@@ -2,20 +2,17 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import pool from './db.js'; // ما تمسحش
+import pool from './db.js'
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 // استيراد الـ routes الجديدة
-import gamesRoutes from './routes/games.js';
-import linksRoutes from './routes/links.js';
-import imagesRoutes from './routes/images.js';
-import sectionsRoutes from './routes/sections.js';
-import genresRoutes from './routes/genres.js';
-import platformsRoutes from './routes/platforms.js';
-import searchRoutes from './routes/search.js';
-import authRoutes from './routes/auth.js';
+// import authRoutes from './routes/auth.js'; // Removed
+import groupRoutes from './routes/groups.js';
+import habitRoutes from './routes/habits.js';
+
 dotenv.config();
 const app = express();
+
 // Middlewares
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5174'],
@@ -23,15 +20,11 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
+
 // Mount routes
-app.use('/api/games', gamesRoutes);         // كل الـ routes اللي تخص الألعاب
-app.use('/api/links', linksRoutes);
-app.use('/api/images', imagesRoutes);
-app.use('/api/sections', sectionsRoutes);
-app.use('/api/genres', genresRoutes);
-app.use('/api/platforms', platformsRoutes);
-app.use('/api/search', searchRoutes);
-app.use('/api/admin', authRoutes); // دلوقتي POST /api/admin/login هيشتغل
+// app.use('/api/admin', authRoutes); // Removed
+app.use('/api/groups', groupRoutes);
+app.use('/api/habits', habitRoutes);
 // Swagger
 const swaggerOptions = {
   definition: {
